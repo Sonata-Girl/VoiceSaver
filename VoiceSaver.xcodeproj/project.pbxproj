@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		67A1BE172ACAE60000D7A254 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67A1BE162ACAE60000D7A254 /* AppDelegate.swift */; };
 		67A1BE192ACAE60000D7A254 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67A1BE182ACAE60000D7A254 /* SceneDelegate.swift */; };
-		67A1BE1B2ACAE60000D7A254 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67A1BE1A2ACAE60000D7A254 /* ViewController.swift */; };
 		67A1BE202ACAE60200D7A254 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 67A1BE1F2ACAE60200D7A254 /* Assets.xcassets */; };
 		67A1BE232ACAE60200D7A254 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 67A1BE212ACAE60200D7A254 /* LaunchScreen.storyboard */; };
 		67EF8F892ACB5EE30051B8B7 /* AudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67EF8F882ACB5EE30051B8B7 /* AudioRecorder.swift */; };
@@ -22,7 +21,6 @@
 		67A1BE132ACAE60000D7A254 /* VoiceSaver.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VoiceSaver.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		67A1BE162ACAE60000D7A254 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		67A1BE182ACAE60000D7A254 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		67A1BE1A2ACAE60000D7A254 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		67A1BE1F2ACAE60200D7A254 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		67A1BE222ACAE60200D7A254 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		67A1BE242ACAE60200D7A254 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -65,7 +63,6 @@
 			children = (
 				67A1BE162ACAE60000D7A254 /* AppDelegate.swift */,
 				67A1BE182ACAE60000D7A254 /* SceneDelegate.swift */,
-				67A1BE1A2ACAE60000D7A254 /* ViewController.swift */,
 				67EF8F8C2ACB5FDB0051B8B7 /* MainViewController.swift */,
 				67EF8F8E2ACB5FEE0051B8B7 /* Models */,
 				67A1BE1F2ACAE60200D7A254 /* Assets.xcassets */,
@@ -155,7 +152,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				67A1BE1B2ACAE60000D7A254 /* ViewController.swift in Sources */,
 				67A1BE172ACAE60000D7A254 /* AppDelegate.swift in Sources */,
 				67EF8F8B2ACB5F630051B8B7 /* AudioPlayer.swift in Sources */,
 				67EF8F8D2ACB5FDB0051B8B7 /* MainViewController.swift in Sources */,
