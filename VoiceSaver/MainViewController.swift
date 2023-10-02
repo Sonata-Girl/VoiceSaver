@@ -1,24 +1,14 @@
 //
-//  ViewController.swift
+//  MainViewController.swift
 //  VoiceSaver
 //
 //  Created by Sonata Girl on 02.10.2023.
 //
 
 import UIKit
-import AVFAudio
 
-class ViewController: UIViewController {
-    
-    private var audioRecorder: AVAudioRecorder?
-    private var audioPlayer: AVAudioPlayer?
-    private var audioURL: URL?
-    
-    private lazy var recordStarted = false
-    private lazy var playStarted = false
-    private var timer: Timer?
-    private lazy var startTime: TimeInterval = 0.0
-       
+class MainViewController: UIViewController {
+  
     private let startRecordImage = UIImage(named: "startRecord")
     private let stopRecordImage = UIImage(named: "stopRecord")
     
@@ -56,11 +46,20 @@ class ViewController: UIViewController {
         return label
     }()
     
+    private var audioRecorder: AudioRecorder?
+    private var audioPlayer: AudioPlayer?
+    private var timer: Timer?
+    private lazy var startTime: TimeInterval = 0.0
+    private lazy var recordStarted = false
+    private lazy var playStarted = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupUI() 
+        setupUI()
+        audioRecorder = AudioRecorder()
+        audioPlayer = AudioPlayer()
     }
-
+    
     private func setupUI() {
         view.addSubview(recordButton)
         NSLayoutConstraint.activate([
@@ -84,7 +83,7 @@ class ViewController: UIViewController {
             playButton.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor, multiplier: 0.3)
         ])
     }
-
+    
     @objc func startRecordPressed() {
         guard !playStarted else { return }
         recordStarted = !recordStarted
@@ -104,16 +103,15 @@ class ViewController: UIViewController {
     func startRecord() {
         startTime = Date().timeIntervalSinceReferenceDate
         timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
-        recordSound()
+        audioRecorder?.startRecording()
     }
     
     func stopRecord() {
-        audioRecorder?.stop()
-        let nameFile = saveRecord(recordURL: audioURL!)
+        let fileName = audioRecorder?.stopRecording()
     }
     
     @objc func startPlayPressed() {
-        guard !recordStarted, audioURL != nil else { return }
+        guard !recordStarted else { return }
         playStarted = !playStarted
         if playStarted {
             playButton.image = stopPlayImage
@@ -124,22 +122,23 @@ class ViewController: UIViewController {
             playButton.image = startPlayImage
             timeLabel.textColor = .white
             timer?.invalidate()
+            stopPlaying()
         }
     }
     
     func startPlaying() {
         startTime = Date().timeIntervalSinceReferenceDate
         timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
-        playSound()
+        audioPlayer?.startPlaying(url: getDocumentsDirectory().appendingPathComponent("recording.m4a"))
     }
     
     func stopPlaying() {
-        audioPlayer?.stop()
+        audioPlayer?.stopPlaying()
     }
     
     @objc func updateTimer() {
         if playStarted {
-            if let isPlaying = audioPlayer?.isPlaying {
+            if let isPlaying = audioPlayer?.isPlaying() {
                 if !isPlaying {
                     playButton.image = startPlayImage
                     timeLabel.textColor = .white
@@ -155,46 +154,12 @@ class ViewController: UIViewController {
     }
     
     private func stringFromTimeInterval(interval: TimeInterval) -> String {
-         let interval = Int(interval)
-         let hours = interval / 3600
-         let minutes = interval / 60
-         let seconds = interval % 60
-
-         return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
-     }
-    
-    private func recordSound() {
-        audioURL = getDocumentsDirectory().appendingPathComponent("recording.m4a")
-        let settings = [
-                AVFormatIDKey: Int(kAudioFormatMPEG4AAC),
-                AVSampleRateKey: 12000,
-                AVNumberOfChannelsKey: 1,
-                AVEncoderAudioQualityKey: AVAudioQuality.high.rawValue
-            ]
-          
-        do {
-            try AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.record)
-            try AVAudioSession.sharedInstance().setActive(true) // пытаемся включить
-            audioRecorder = try AVAudioRecorder(url: audioURL!, settings: settings)
-            audioRecorder?.record()
-        } catch {
-            print("Error recording audio: \(error.localizedDescription)")
-        }
-    }
-    
-    private func playSound() {
-        do {
-            try AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.playback)
-            try AVAudioSession.sharedInstance().setActive(true)
-            
-            audioPlayer = try AVAudioPlayer(contentsOf: audioURL!)
-            if let player = audioPlayer {
-                player.numberOfLoops = 0
-                player.play()
-            }
-        } catch {
-            print("Error playing audio: \(error.localizedDescription)")
-        }
+        let interval = Int(interval)
+        let hours = interval / 3600
+        let minutes = interval / 60
+        let seconds = interval % 60
+        
+        return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
     }
     
     private func getDocumentsDirectory() -> URL {
@@ -202,31 +167,5 @@ class ViewController: UIViewController {
         let documentsDirectory = paths[0]
         return documentsDirectory
     }
-    
-    func saveRecord(recordURL: URL) -> String? {
-        let documentsDirectory = getDocumentsDirectory()
-        
-        let fileName = recordURL.absoluteString
-        
-        do {
-            let data = try Data(contentsOf: recordURL)
-            
-            if FileManager.default.fileExists(atPath: recordURL.path) {
-                do {
-                    try FileManager.default.removeItem(at: recordURL)
-                    print("Removed old file")
-                } catch let error {
-                    print("Couldn't remove old file with error: \(error.localizedDescription)")
-                }
-            }
-        
-            try data.write(to: recordURL)
-            return fileName
-        } catch let error {
-            print("Error saving file with error: \(error.localizedDescription)")
-            return nil
-        }
-    }
-    
 }
 
