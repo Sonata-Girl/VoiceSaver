@@ -10,7 +10,6 @@ import AVFAudio
 
 class AudioPlayer {
     private var audioPlayer: AVAudioPlayer?
-    private var audioURL: URL?
     
     func startPlaying(url: URL) {
         do {

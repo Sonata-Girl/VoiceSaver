@@ -10,10 +10,25 @@ import AVFAudio
 
 class AudioRecorder {
     private var audioRecorder: AVAudioRecorder?
-    private var audioURL: URL?
+    var audioURL: URL?
+    
+    private var audioFileExtension = ".m4a"
+   
+    lazy var permissionGranted = false
+
+    func requestPermission() -> Bool {
+        AVAudioSession.sharedInstance().requestRecordPermission { (granted: Bool) in
+            if granted {
+                self.permissionGranted = true
+            } 
+        }
+        return permissionGranted
+    }
     
     func startRecording() {
-        audioURL = getDocumentsDirectory().appendingPathComponent("recording.m4a")
+        guard permissionGranted else { return }
+        let fileName = UUID().uuidString
+        audioURL = getDocumentsDirectory().appendingPathComponent("\(fileName)\(audioFileExtension)")
         let settings = [
             AVFormatIDKey: Int(kAudioFormatMPEG4AAC),
             AVSampleRateKey: 12000,
@@ -33,7 +48,7 @@ class AudioRecorder {
     
     func stopRecording() -> String? {
         audioRecorder?.stop()
-        return saveRecord(recordURL: audioURL!)
+        return saveAudioRecording(recordURL: audioURL!)
     }
     
     private func getDocumentsDirectory() -> URL {
@@ -42,9 +57,8 @@ class AudioRecorder {
         return documentsDirectory
     }
     
-    private func saveRecord(recordURL: URL) -> String? {
-        let documentsDirectory = getDocumentsDirectory()
-        
+    private func saveAudioRecording(recordURL: URL) -> String? {
+//        let documentsDirectory = getDocumentsDirectory()
         let fileName = recordURL.absoluteString
         
         do {
@@ -66,4 +80,5 @@ class AudioRecorder {
             return nil
         }
     }
+    
 }
